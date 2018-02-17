@@ -11,6 +11,7 @@ from std_srvs.srv._Trigger import Trigger, TriggerResponse
 import VL53L0X
 from sensor_msgs.msg._Range import Range
 import math
+import threading
 
 
 class VL53L0x(object):
@@ -20,6 +21,8 @@ class VL53L0x(object):
         Constructor
         '''
         rospy.init_node("vl53l0x")
+
+	self.__lock = threading.Lock()
         
         self.__tof = VL53L0X.VL53L0X()
         
@@ -44,20 +47,21 @@ class VL53L0x(object):
         res = StartRangingResponse()
         
         if not self.__isRanging:
-            self.__tof.start_ranging(req.mode)        
-            self.__isRanging = True
-            res.success = True
+            with self.__lock:
+                self.__tof.start_ranging(req.mode)        
+                self.__isRanging = True
+                res.success = True
             
-            # Get the timing information in order to determine how fast
-            # we need to poll the tof, timing is in micro seconds
-            timing = self.__tof.get_timing()
-            if (timing < 20000):
-                timing = 20000
+                # Get the timing information in order to determine how fast
+                # we need to poll the tof, timing is in micro seconds
+            	timing = self.__tof.get_timing()
+            	if (timing < 20000):
+                    timing = 20000
             
-            period = rospy.Duration(timing / 1e+6)
-            rospy.loginfo("Polling at " + repr(period.nsecs/1e+9) + "s")
+                period = rospy.Duration(timing / 1e+6)
+                rospy.loginfo("Polling at " + repr(period.nsecs/1e+9) + "s")
             
-            self.__rangingThread = rospy.Timer(period, self.__readRange)
+                self.__rangingThread = rospy.Timer(period, self.__readRange)
             
         else:
             res.success = False
@@ -77,17 +81,19 @@ class VL53L0x(object):
         
         reading.min_range = rospy.get_param("~min_range",0.005)
         reading.max_range = rospy.get_param("~max_range",2.0)
+       
+        with self.__lock: 
+            reading.range = self.__tof.get_distance() / 1000.0
         
-        range.range = self.__tof.get_distance() / 1000.0
-        
-        self.__rangePub.publish(range)
+        self.__rangePub.publish(reading)
         
     def __stopRanging(self, req):
         
         res = TriggerResponse()
         
         if self.__isRanging:
-            self.__tof.stop_ranging()
+            with self.__lock:
+            	self.__tof.stop_ranging()
             res.success = True
             self.__isRanging = False
             self.__rangingThread.shutdown()
