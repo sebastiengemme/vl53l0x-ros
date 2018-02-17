@@ -5,4 +5,7 @@ uint8 VL53L0X_LONG_RANGE_MODE         = 3   # Longe Range mode
 uint8 VL53L0X_HIGH_SPEED_MODE         = 4   # High Speed mode
 
 # One of VL53L0X_*
-uint8 quality
+uint8 mode
+---
+bool success   # indicate successful run of triggered service
+string message # informational, e.g. for error messages

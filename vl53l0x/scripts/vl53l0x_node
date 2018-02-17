@@ -1,0 +1,9 @@
+#!/usr/bin/env python
+
+from vl53l0x.tof import VL53L0x
+
+if __name__ == "__main__":
+
+    tof = VL53L0x()
+
+    rospy.spin()
