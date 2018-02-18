@@ -1,3 +1,9 @@
+Version 1.0.4:
+ - Updating readme
+ - Adding configurable field of view (default is 25 degrees, converted to radians)
+ - Adding configurable frame_id
+ - Merge branch 'master' into develop
+
 Version 1.0.3:
  - Merge branch 'develop'
 

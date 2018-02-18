@@ -50,8 +50,8 @@ class VL53L0x(object):
         Constructor
         '''
         rospy.init_node("vl53l0x")
-
-	self.__lock = threading.Lock()
+        
+        self.__lock = threading.Lock()
         
         self.__tof = VL53L0X.VL53L0X()
         
@@ -83,8 +83,8 @@ class VL53L0x(object):
             
                 # Get the timing information in order to determine how fast
                 # we need to poll the tof, timing is in micro seconds
-            	timing = self.__tof.get_timing()
-            	if (timing < 20000):
+                timing = self.__tof.get_timing()
+                if (timing < 20000):
                     timing = 20000
             
                 period = rospy.Duration(timing / 1e+6)
@@ -102,11 +102,11 @@ class VL53L0x(object):
         
         reading = Range()
         
-        reading.header.frame_id = "range_finder"
+        reading.header.frame_id = rospy.get_param("~frame_id","range_finder")
         reading.header.stamp = rospy.Time.now()
         
         reading.radiation_type = Range.INFRARED
-        reading.field_of_view = math.radians(25.0)
+        reading.field_of_view = rospy.get_param("~fov", math.radians(25.0))
         
         reading.min_range = rospy.get_param("~min_range",0.005)
         reading.max_range = rospy.get_param("~max_range",2.0)
