@@ -28,7 +28,9 @@ There is also the possibilty to automatically start the ROS driver (still TBD):
 
     rosrun vl53l0x vl53l0x_node _autostart:=true _mode=1
 
-would automatically start the node in *Better Accuracy Mode*
+would automatically start the node in *Better Accuracy Mode*.
+
+The frame id is also customizable by specifying a `frame_id` parameter.
 
 ## Prerequisites
 The only prerequisite is the [VL53L0X Python API on Raspberry Pi](https://github.com/johnbryanmoore/VL53L0X_rasp_python) from Mr. Bryan Moore.
@@ -37,3 +39,4 @@ The only prerequisite is the [VL53L0X Python API on Raspberry Pi](https://github
 Features that will be supported in the future.
 * Add support for configurable address, this will enable having multiple TOF sensors on the same i2c bus.
 * Implement an automatic start feature so it can start producing range readings at startup.
+* Add configurable frame id.
