@@ -18,7 +18,7 @@ Where `mode` takes one of the folling values:
     Long Range Mode: 3
     High Speed Mode: 4
 
-It will then start producing standard `sensor_msgs/Range` messages on a topic called `/vl53l0x/range`. 
+It will then start producing standard `sensor_msgs/Range` messages on a topic called `/vl53l0x/range`. The range is in meters while the field of view is expressed in radians, in line with [http://www.ros.org/reps/rep-0103.html](ROS REP 103).
 
 To stop ranging:
 
