@@ -1,0 +1,5 @@
+<launch>
+    <node name="vl53l0x" type="vl53l0x_node" pkg="vl53l0x">
+        <param name="autostart" value="true" type="bool"/>
+    </node>
+</launch>
