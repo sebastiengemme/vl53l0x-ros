@@ -35,13 +35,18 @@ Created on Feb 17, 2018
 from __future__ import division
 
 import rospy
-from vl53l0x_msgs.srv._StartRanging import StartRanging, StartRangingResponse,\
+from vl53l0x_msgs.srv._StartRanging import StartRanging, StartRangingResponse, \
     StartRangingRequest
 from std_srvs.srv._Trigger import Trigger, TriggerResponse
 import VL53L0X
 from sensor_msgs.msg._Range import Range
 import math
 import threading
+import RPi.GPIO as GPIO
+import time
+
+ADDRESS_PARAM = "~address"
+XSHUT_GPIO_PARAM = "~xshut_gpio"
 
 
 class VL53L0x(object):
@@ -54,7 +59,7 @@ class VL53L0x(object):
         
         self.__lock = threading.Lock()
         
-        self.__tof = VL53L0X.VL53L0X()
+        self.__initSensor()        
         
         # Advertise services
         self.__initServices()
@@ -63,17 +68,42 @@ class VL53L0x(object):
         
         self.__isRanging = False
         
-        self.__rangingThread = None
+        self.__rangingThread = None            
         
         # Check if we want to start ranging automatically
-        if rospy.get_param("~autostart",False):
+        if rospy.get_param("~autostart", False):
             # If mode is not specified, start in VL53L0X_BETTER_ACCURACY_MODE by default.
-            req = StartRangingRequest(rospy.get_param("~mode",StartRangingRequest.VL53L0X_BETTER_ACCURACY_MODE))
+            req = StartRangingRequest(rospy.get_param("~mode", StartRangingRequest.VL53L0X_BETTER_ACCURACY_MODE))
             res = self.__startRanging(req)
             
             if not res.success:
                 rospy.logerr("Failed to automatically start ranging: " + res.message)
-        
+    
+    def __initSensor(self):
+        if not rospy.has_param(ADDRESS_PARAM):  # Just using the standard address (0x29)
+            self.__tof = VL53L0X.VL53L0X()
+        else:  # Expecting to have a gpio
+            assert(isinstance(int, rospy.get_param(ADDRESS_PARAM)))
+            assert(isinstance(int, rospy.get_param(XSHUT_GPIO_PARAM)))            
+            
+            if not rospy.has_param(XSHUT_GPIO_PARAM):
+                raise rospy.ROSException("Must specify the GPIO connected to the xshut pin")
+            else:
+                rospy.loginfo("Configuration address to " + repr(hex(rospy.get_param(ADDRESS_PARAM))))
+                xshutGPIO = rospy.get_param(XSHUT_GPIO_PARAM)
+                # Setup GPIO for shutdown pins on each VL53L0X
+                GPIO.setmode(GPIO.BCM)
+                GPIO.setup(xshutGPIO, GPIO.OUT)
+                # Set all shutdown pins low to turn off each VL53L0X
+                GPIO.output(xshutGPIO, GPIO.LOW)
+                # Make sure the sensor resets
+                time.sleep(0.5)
+                self.__tof = VL53L0X.VL53L0X(rospy.get_param(ADDRESS_PARAM))
+                
+                # Turn on the sensor
+                GPIO.output(xshutGPIO, GPIO.HIGH)
+                time.sleep(0.5)
+    
     def __initServices(self):
         self.__startRangingSrv = rospy.Service("~start_ranging", StartRanging, self.__startRanging)
         self.__stopRangingSrv = rospy.Service("~stop_ranging", Trigger, self.__stopRanging)
@@ -98,7 +128,7 @@ class VL53L0x(object):
                     timing = 20000
             
                 period = rospy.Duration(timing / 1e+6)
-                rospy.loginfo("Polling at " + repr(period.nsecs/1e+9) + "s")
+                rospy.loginfo("Polling at " + repr(period.nsecs / 1e+9) + "s")
             
                 self.__rangingThread = rospy.Timer(period, self.__readRange)
             
@@ -112,14 +142,14 @@ class VL53L0x(object):
         
         reading = Range()
         
-        reading.header.frame_id = rospy.get_param("~frame_id","range_finder")
+        reading.header.frame_id = rospy.get_param("~frame_id", "range_finder")
         reading.header.stamp = rospy.Time.now()
         
         reading.radiation_type = Range.INFRARED
         reading.field_of_view = rospy.get_param("~fov", math.radians(25.0))
         
-        reading.min_range = rospy.get_param("~min_range",0.005)
-        reading.max_range = rospy.get_param("~max_range",2.0)
+        reading.min_range = rospy.get_param("~min_range", 0.005)
+        reading.max_range = rospy.get_param("~max_range", 2.0)
        
         with self.__lock: 
             reading.range = self.__tof.get_distance() / 1000.0
