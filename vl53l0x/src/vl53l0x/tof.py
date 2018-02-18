@@ -102,7 +102,7 @@ class VL53L0x(object):
         
         reading = Range()
         
-        reading.header.frame_id = "range_finder"
+        reading.header.frame_id = rospy.get_param("~frame_id","range_finder")
         reading.header.stamp = rospy.Time.now()
         
         reading.radiation_type = Range.INFRARED
