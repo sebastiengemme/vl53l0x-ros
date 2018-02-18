@@ -1,3 +1,6 @@
+Version 1.0.2:
+ - Updating bumpversion.sh
+
 Version 1.0.1:
  - Adding import rospy
  - Adding stuff to README.md
