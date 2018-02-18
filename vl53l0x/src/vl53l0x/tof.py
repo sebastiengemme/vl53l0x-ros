@@ -35,7 +35,8 @@ Created on Feb 17, 2018
 from __future__ import division
 
 import rospy
-from vl53l0x_msgs.srv._StartRanging import StartRanging, StartRangingResponse
+from vl53l0x_msgs.srv._StartRanging import StartRanging, StartRangingResponse,\
+    StartRangingRequest
 from std_srvs.srv._Trigger import Trigger, TriggerResponse
 import VL53L0X
 from sensor_msgs.msg._Range import Range
@@ -63,6 +64,15 @@ class VL53L0x(object):
         self.__isRanging = False
         
         self.__rangingThread = None
+        
+        # Check if we want to start ranging automatically
+        if rospy.get_param("~autostart",False):
+            # If mode is not specified, start in VL53L0X_BETTER_ACCURACY_MODE by default.
+            req = StartRangingRequest(rospy.get_param("~mode",StartRangingRequest.VL53L0X_BETTER_ACCURACY_MODE))
+            res = self.__startRanging(req)
+            
+            if not res.success:
+                rospy.logerr("Failed to automatically start ranging: " + res.message)
         
     def __initServices(self):
         self.__startRangingSrv = rospy.Service("~start_ranging", StartRanging, self.__startRanging)
@@ -122,7 +132,7 @@ class VL53L0x(object):
         
         if self.__isRanging:
             with self.__lock:
-            	self.__tof.stop_ranging()
+                self.__tof.stop_ranging()
             res.success = True
             self.__isRanging = False
             self.__rangingThread.shutdown()
