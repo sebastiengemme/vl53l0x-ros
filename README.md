@@ -37,6 +37,7 @@ The only prerequisite is the [VL53L0X Python API on Raspberry Pi](https://github
 
 ## TODO
 Features that will be supported in the future.
+
 * Add support for configurable address, this will enable having multiple TOF sensors on the same i2c bus.
 * Implement an automatic start feature so it can start producing range readings at startup.
 * Add configurable frame id.
