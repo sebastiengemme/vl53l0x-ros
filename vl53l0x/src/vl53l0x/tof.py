@@ -73,7 +73,9 @@ class VL53L0x(object):
         # Check if we want to start ranging automatically
         if rospy.get_param("~autostart", False):
             # If mode is not specified, start in VL53L0X_BETTER_ACCURACY_MODE by default.
-            req = StartRangingRequest(rospy.get_param("~mode", StartRangingRequest.VL53L0X_BETTER_ACCURACY_MODE))
+            mode = rospy.get_param("~mode", StartRangingRequest.VL53L0X_BETTER_ACCURACY_MODE)
+            rospy.loginfo("Autostarting ranging in mode " + repr(mode))
+            req = StartRangingRequest(mode)
             res = self.__startRanging(req)
             
             if not res.success:
@@ -83,14 +85,16 @@ class VL53L0x(object):
         if not rospy.has_param(ADDRESS_PARAM):  # Just using the standard address (0x29)
             self.__tof = VL53L0X.VL53L0X()
         else:  # Expecting to have a gpio
-            assert(isinstance(int, rospy.get_param(ADDRESS_PARAM)))
-            assert(isinstance(int, rospy.get_param(XSHUT_GPIO_PARAM)))            
+            assert(isinstance(rospy.get_param(ADDRESS_PARAM),int))
             
             if not rospy.has_param(XSHUT_GPIO_PARAM):
-                raise rospy.ROSException("Must specify the GPIO connected to the xshut pin")
+                raise rospy.ROSException("Must specify the GPIO connected to the xshut down pin (parameter " + XSHUT_GPIO_PARAM + ")")
             else:
-                rospy.loginfo("Configuration address to " + repr(hex(rospy.get_param(ADDRESS_PARAM))))
+                rospy.loginfo("Configuring address to " + repr(hex(rospy.get_param(ADDRESS_PARAM))))
+                assert(isinstance(rospy.get_param(XSHUT_GPIO_PARAM),int))            
                 xshutGPIO = rospy.get_param(XSHUT_GPIO_PARAM)
+
+		GPIO.setwarnings(False)
                 # Setup GPIO for shutdown pins on each VL53L0X
                 GPIO.setmode(GPIO.BCM)
                 GPIO.setup(xshutGPIO, GPIO.OUT)
