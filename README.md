@@ -7,9 +7,11 @@ Launch the node (make sure you have a `roscore` running):
     rosrun vl53l0x vl53l0x_node
 
 To start ranging:
+
     rosservice call /vl53l0x/start_ranging mode
 
 Where `mode` takes one of the folling values:
+
     Good Accuracy Mode: 0
     Better Accuracy Mode: 1
     Best Accuracy Mode: 2
@@ -19,10 +21,13 @@ Where `mode` takes one of the folling values:
 It will then start producing standard `sensor_msgs/Range` messages on a topic called `/vl53l0x/range`. 
 
 To stop ranging:
+
     rosservice call /vl53l0x/stop_ranging
 
 There is also the possibilty to automatically start the ROS driver (still TBD):
+
     rosrun vl53l0x vl53l0x_node _autostart:=true _mode=1
+
 would automatically start the node in *Better Accuracy Mode*
 
 ## Prerequisites
