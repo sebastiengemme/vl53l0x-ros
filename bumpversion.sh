@@ -58,3 +58,5 @@ fi
 
 # Change the package.xml files
 sed -i "s,\(.*<version>\).*\(</version>\),\1$(cat VERSION)\2," vl53l0x/package.xml vl53l0x_msgs/package.xml
+
+git commit -s -m "Bumping versions in package.xml" -a
