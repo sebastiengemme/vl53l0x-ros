@@ -1,3 +1,6 @@
+Version 1.1.1:
+ - Fixing typo in README
+
 Version 1.1.0:
  - Updating README
  - Auto start is working and tested, address assignment is tested an working as well

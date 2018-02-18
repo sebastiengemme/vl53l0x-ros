@@ -35,7 +35,7 @@ The frame id is also customizable by specifying a `frame_id` parameter.
 
 The i2c bus address of the sensor can be changed by specifying the following ROS parameters:
 
-    address: an address (looks like we can only express is in base 10)
+    address: an address (looks like we can only express it in base 10)
     xshut_gpio: the GPIO number (not the pin number) connected to the xshut pin of the vl53l0x
 
 ## Prerequisites
