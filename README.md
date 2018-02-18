@@ -4,6 +4,7 @@ VL53L0X ROS Driver
 This ROS driver interfaces with the VL53L0X, it is meant to run on the Rasbperry Pi. The driver produces standard `sensor_msgs/Range` messages.
 
 Launch the node (make sure you have a `roscore` running):
+
     rosrun vl53l0x vl53l0x_node
 
 To start ranging:
