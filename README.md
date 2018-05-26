@@ -1,4 +1,4 @@
-VL53L0X ROS Driver
+ROS Driver for the VL53L0X TOF Range Finder
 ===================
 
 This ROS driver interfaces with the VL53L0X, it is meant to run on the Rasbperry Pi. The driver produces standard `sensor_msgs/Range` messages.
