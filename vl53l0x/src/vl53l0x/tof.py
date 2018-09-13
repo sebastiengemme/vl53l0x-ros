@@ -94,7 +94,7 @@ class VL53L0x(object):
                 assert(isinstance(rospy.get_param(XSHUT_GPIO_PARAM),int))            
                 xshutGPIO = rospy.get_param(XSHUT_GPIO_PARAM)
 
-		GPIO.setwarnings(False)
+                GPIO.setwarnings(False)
                 # Setup GPIO for shutdown pins on each VL53L0X
                 GPIO.setmode(GPIO.BCM)
                 GPIO.setup(xshutGPIO, GPIO.OUT)

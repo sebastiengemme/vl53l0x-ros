@@ -40,3 +40,6 @@ The i2c bus address of the sensor can be changed by specifying the following ROS
 
 ## Prerequisites
 The only prerequisite is the [VL53L0X Python API on Raspberry Pi](https://github.com/johnbryanmoore/VL53L0X_rasp_python) from Mr. Bryan Moore.
+
+## Openembedded Recipe
+This pakage also comes with an Openembedded recipe located in the openembedded folter
