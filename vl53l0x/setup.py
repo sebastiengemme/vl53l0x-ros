@@ -1,9 +1,17 @@
-from distutils.core import setup
-from catkin_pkg.python_setup import generate_distutils_setup
+from setuptools import find_packages
+from setuptools import setup
 
-d = generate_distutils_setup(
-    packages=['vl53l0x'],
-    package_dir={'': 'src'}
+setup(
+    name='vl53l0x',
+    packages=find_packages(),
+    install_requires=['setuptools'],
+    py_modules=['vl53l0x_node'],
+    zip_safe=True,
+    author='Sebastien Gemme',
+    author_email='sgemme@protonmail.com',
+    entry_points = {
+        'console_scripts': [
+            'vl53l0x_node = vl53l0x_node:main'
+        ]
+    }
 )
-
-setup(**d)

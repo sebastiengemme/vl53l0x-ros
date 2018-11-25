@@ -1,41 +1,29 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(vl53l0x_msgs)
 
-find_package(catkin REQUIRED COMPONENTS
-  sensor_msgs
-  message_generation
+find_package(ament_cmake REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
+find_package(std_msgs REQUIRED)
+
+set(srv_files 
+    "srv/StartRanging.srv"
 )
 
-## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+# Default to C++14
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
 
-## Generate services in the 'srv' folder
-add_service_files(
-   DIRECTORY srv
-   FILES
-   StartRanging.srv
+rosidl_generate_interfaces(${PROJECT_NAME}
+   ${srv_files}
+   DEPENDENCIES sensor_msgs std_msgs
 )
 
-## Generate actions in the 'action' folder
-# add_action_files(
-#   FILES
-#   Action1.action
-#   Action2.action
-# )
+ament_export_dependencies(rosidl_default_runtime)
+ament_export_include_directories(include)
 
-## Generate added messages and services with any dependencies listed here
-generate_messages(
-   DEPENDENCIES
-   sensor_msgs
-)
-
-catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES vl53l0x_msgs
-#  CATKIN_DEPENDS sensor_msgs
-#  DEPENDS system_lib
-)
+ament_package()
