@@ -43,15 +43,19 @@ The only prerequisite is the [VL53L0X Python API on Raspberry Pi](https://github
 
 ## Catkin Build
 If using catkin, create a catkin repo:
+<pre>
  mkdir -p ~/catkin_ws_vl530l/src
  cd ~/catkin_ws_vl530l/src
  catkin_init_workspace
+</pre>
  
 Copy the repo info ```~/catkin_ws_vl530l/src```
 
 Build the repo:
+<pre>
  cd ~/catkin_ws_vl530l
  catkin_make
+ </pre>
 
 ## Openembedded Recipe
 This pakage also comes with an Openembedded recipe located in the openembedded folter
