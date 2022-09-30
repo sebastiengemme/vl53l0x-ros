@@ -1,3 +1,10 @@
+Version 1.2.0:
+ - Adding openembedded recipe
+ - Merge branch 'hotfix-1.1.1' into develop
+ - Merge branch 'hotfix-1.1.1'
+ - Fixed indent
+ - Merge branch 'release-1.1.0' into develop
+
 Version 1.1.1:
  - Fixing typo in README
 
