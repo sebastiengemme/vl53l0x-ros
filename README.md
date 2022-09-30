@@ -38,13 +38,14 @@ The i2c bus address of the sensor can be changed by specifying the following ROS
     address: an address (looks like we can only express it in base 10)
     xshut_gpio: the GPIO number (not the pin number) connected to the xshut pin of the vl53l0x
 
-## Prerequisites
+## Building
+### Prerequisites
 The only prerequisite is the [VL53L0X Python API on Raspberry Pi](https://github.com/johnbryanmoore/VL53L0X_rasp_python). The out of the box version needs some patching in order to work. To build and install the depency, use the script called ```build_dep.sh```
 ```bash
 ./build_dep.sh
 ```
 
-## Catkin Build
+### Catkin Build
 If using catkin, create a catkin repo:
 ```bash
  mkdir -p ~/catkin_ws_vl530l/src
@@ -61,4 +62,4 @@ Build the repo:
 ```
 
 ## Openembedded Recipe
-This pakage also comes with an Openembedded recipe located in the openembedded folter
+This pakage also comes with an Openembedded recipe located in the openembedded folder.
