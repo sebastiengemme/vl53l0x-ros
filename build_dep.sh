@@ -8,9 +8,9 @@ make
 
 echo "Instlaling ..."
 # Copy the python library to the site-packages directory
-cp python/VL53L0X.py $(python -c 'import site; print(site.getsitepackages()[0])')
+sudo install -m 0755 python/VL53L0X.py $(python -c 'import site; print(site.getsitepackages()[0])')
 
 # Copy the so to /usr/lib
-cp bin/*.so /usr/lib
+sudo install -m 0755 bin/*.so /usr/lib
 
 cd -
