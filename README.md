@@ -39,7 +39,7 @@ The i2c bus address of the sensor can be changed by specifying the following ROS
     xshut_gpio: the GPIO number (not the pin number) connected to the xshut pin of the vl53l0x
 
 ## Prerequisites
-The only prerequisite is the [VL53L0X Python API on Raspberry Pi]. The out of the box version needs some patching in order to work. To build and install the depency, use the script called ```build_dep.sh```
+The only prerequisite is the [VL53L0X Python API on Raspberry Pi](https://github.com/johnbryanmoore/VL53L0X_rasp_python). The out of the box version needs some patching in order to work. To build and install the depency, use the script called ```build_dep.sh```
 ```bash
 ./build_dep.sh
 ```
