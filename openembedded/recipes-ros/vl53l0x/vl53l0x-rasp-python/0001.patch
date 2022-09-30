@@ -1,0 +1,36 @@
+diff --git a/Makefile b/Makefile
+index 93c1099..69f865b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,8 +1,7 @@
+-CC = $(CROSS_COMPILE)gcc
+ RM = rm
+ 
+ #CFLAGS = -O0 -g -Wall -c
+-CFLAGS = -O2 -Wall -c
++CFLAGS = -O2 -Wall -c -fPIC
+ 
+ OUTPUT_DIR = bin
+ OBJ_DIR = obj
+@@ -18,7 +17,7 @@ INCLUDES = \
+ 	-I$(ROOT_DIR)/platform/inc
+ 
+ PYTHON_INCLUDES = \
+-    -I/usr/include/python2.7
++    -I$(pkg-config --cflags-only-I python)
+ 
+ VPATH = \
+ 	$(API_DIR)/core/src \
+diff --git a/python/VL53L0X.py b/python/VL53L0X.py
+index 07c35ab..a7802e4 100755
+--- a/python/VL53L0X.py
++++ b/python/VL53L0X.py
+@@ -65,7 +65,7 @@ def i2c_write(address, reg, data_p, length):
+     return ret_val
+ 
+ # Load VL53L0X shared lib 
+-tof_lib = CDLL("../bin/vl53l0x_python.so")
++tof_lib = CDLL("vl53l0x_python.so")
+ 
+ # Create read function pointer
+ READFUNC = CFUNCTYPE(c_int, c_ubyte, c_ubyte, POINTER(c_ubyte), c_ubyte)

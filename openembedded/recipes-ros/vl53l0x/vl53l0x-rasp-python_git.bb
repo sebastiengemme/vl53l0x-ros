@@ -12,17 +12,19 @@
 LICENSE = "CLOSED"
 LIC_FILES_CHKSUM = ""
 
-SRC_URI = "git://github.com/johnbryanmoore/VL53L0X_rasp_python.git;protocol=https"
+SRC_URI = "git://github.com/johnbryanmoore/VL53L0X_rasp_python.git;protocol=https \
+	  file://0001.patch "
 
 # Modify these as desired
 PV = "1.0+git${SRCPV}"
-SRCREV = "52392332de075b82c2a3948edb5f6dd4fe464edd"
+SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git"
 
 # NOTE: this is a Makefile-only piece of software, so we cannot generate much of the
 # recipe automatically - you will need to examine the Makefile yourself and ensure
 # that the appropriate arguments are passed in.
+
 
 do_configure () {
 	# Specify any needed configure commands here
@@ -34,9 +36,23 @@ do_compile () {
 	oe_runmake
 }
 
+inherit python-dir
+
 do_install () {
 	# NOTE: unable to determine what to put here - there is a Makefile but no
 	# target named "install", so you will need to define this yourself
-	:
+	install -d ${D}${libdir}
+	install -m 0755 ${S}/bin/vl53l0x_python.so ${D}${libdir}
+	install -d ${D}${PYTHON_SITEPACKAGES_DIR}
+	install -m 0755 ${S}/python/VL53L0X.py ${D}${PYTHON_SITEPACKAGES_DIR}
+#	:
 }
 
+INSANE_SKIP_${PN} = "ldflags"
+
+FILES_${PN} = " /usr/lib/vl53l0x_python.so  \
+		${PYTHON_SITEPACKAGES_DIR}/VL53L0X.py "
+
+DEPENDS += "python python-smbus"
+RRECOMMENDS_${PN} += "python python-smbus"
+RDEPENDS_${PN} += "python python-smbus"
