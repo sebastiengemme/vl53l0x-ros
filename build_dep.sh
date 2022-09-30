@@ -12,3 +12,5 @@ cp python/VL53L0X.py $(python -c 'import site; print(site.getsitepackages()[0])'
 
 # Copy the so to /usr/lib
 cp bin/*.so /usr/lib
+
+cd -
